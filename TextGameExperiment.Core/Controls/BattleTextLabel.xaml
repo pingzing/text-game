@@ -6,7 +6,7 @@
         <Grid>
             <Grid>
                 <Label x:Name="PioneerLabel" LineBreakMode="WordWrap" FontSize="Medium" TextColor="Transparent"/>
-                <Label x:Name="BackingLabel" BackgroundColor="#B1FFFFFF" HorizontalOptions="Start" VerticalOptions="Start" LineBreakMode="WordWrap" FontSize="Medium" TextColor="WhiteSmoke" Text=""/>
+                <Label x:Name="BackingLabel" HorizontalOptions="Start" VerticalOptions="Start" LineBreakMode="WordWrap" FontSize="Medium" TextColor="WhiteSmoke" Text=""/>
             </Grid>
         </Grid>
     </ScrollView>

@@ -22,7 +22,7 @@ namespace TextGameExperiment.Core.Controls
     public partial class BattleTextLabel : ContentView
     {
         private TimerExt _characterTickTimer;
-        private ConcurrentQueue<TextToken> _tokenBuffer = new ConcurrentQueue<TextToken>();        
+        private ConcurrentQueue<TextToken> _tokenBuffer = new ConcurrentQueue<TextToken>();
         private TextToken _mostRecentToken = null;
         private int _currentPageIndex = 0;
         private double _currentPageMaxHeight = 0;
@@ -60,16 +60,19 @@ namespace TextGameExperiment.Core.Controls
 
         private void CharacterTimerTick(object state)
         {
-            bool didReadChar = _tokenBuffer.TryDequeue(out TextToken readToken);
-            if (didReadChar)
+            Device.BeginInvokeOnMainThread(() =>
             {
-                Device.BeginInvokeOnMainThread(() => ParseToken(readToken));
-            }
-            else
-            {
-                BattleTextState = DialogueState.Halted;
-                _characterTickTimer.Stop();
-            }
+                bool didReadChar = _tokenBuffer.TryDequeue(out TextToken readToken);
+                if (didReadChar)
+                {
+                    ParseToken(readToken);
+                }
+                else
+                {
+                    BattleTextState = DialogueState.Halted;
+                    _characterTickTimer.Stop();
+                }
+            });
         }
 
         private void ParseToken(TextToken readToken)
@@ -92,8 +95,8 @@ namespace TextGameExperiment.Core.Controls
                     BattleTextState = DialogueState.Halted;
                     break;
                 case TokenType.String:
-                case TokenType.Character:                    
-                    BackingLabel.Text += readToken.Value;                    
+                case TokenType.Character:
+                    BackingLabel.Text += readToken.Value;
                     if (BackingLabel.Height > _currentPageMaxHeight)
                     {
                         if (_justConsumedStop)
@@ -116,6 +119,7 @@ namespace TextGameExperiment.Core.Controls
                     BattleTextState = DialogueState.Writing;
                     break;
             }
+            Debug.WriteLine("Parsed: " + readToken.Value);
             _mostRecentToken = readToken;
         }
 
@@ -146,7 +150,7 @@ namespace TextGameExperiment.Core.Controls
         }
 
         public async Task PageDown()
-        {            
+        {
             if (_currentPageIndex >= _finalPageIndex)
             {
                 return;
@@ -169,7 +173,7 @@ namespace TextGameExperiment.Core.Controls
              * drains the buffer.
              * --------------------------------------------------------------------------------*/
             string printableText = BattleTokenizer.StripUnprintableTokens(text);
-            PioneerLabel.Text += text;            
+            PioneerLabel.Text += text;
             double scrollViewportHeight = Scroller.Height;
             _currentPageMaxHeight = (_currentPageIndex + 1) * scrollViewportHeight;
             double totalTextHeight = Scroller.ContentSize.Height;
