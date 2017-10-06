@@ -6,6 +6,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Xamarin.Forms;
+using TextGameExperiment.Core;
 
 namespace TextGameExperiment.Droid
 {
@@ -19,7 +21,12 @@ namespace TextGameExperiment.Droid
 
             base.OnCreate(bundle);
 
+            //Before-init stuff
+            Forms.SetFlags("FastRenderers_Experimental");
+
             global::Xamarin.Forms.Forms.Init(this, bundle);
+
+            //After-init stuff
             LoadApplication(new App());
         }
     }

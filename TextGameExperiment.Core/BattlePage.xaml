@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TextGameExperiment.Core.BattlePage"
+             
+             xmlns:local="clr-namespace:TextGameExperiment"
+             xmlns:controls="clr-namespace:TextGameExperiment.Core.Controls"
+             
+             BackgroundColor="Black"
+             Title="Test">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BattleButtonStyle" TargetType="Button">
+                <Setter Property="BorderColor" Value="Orange"/>
+                <Setter Property="BackgroundColor" Value="Black"/>
+                <Setter Property="TextColor" Value="Orange"/>
+                <Setter Property="HeightRequest" Value="100"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Frame Margin="10, 15, 10, 10" HasShadow="False" OutlineColor="WhiteSmoke">
+            <controls:BattleTextLabel x:Name="NarrationBox" />
+        </Frame>
+
+        <ContentView BackgroundColor="Black" 
+                     HorizontalOptions="Start" VerticalOptions="Start"                
+                     Margin="20, 0, 0, 0"  Padding="5, 0">
+            <Label x:Name="EnemyNameLabel" 
+                   TextColor="WhiteSmoke" 
+                   FontAttributes="Bold"
+                   FontSize="Medium"                   
+                   Text="EnemyName"/>
+        </ContentView>
+
+        <Grid x:Name="ButtonsGrid" Grid.Row="1" Margin="10, 0, 10, 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="Button1" Text="Button1" Grid.Column="0" Style="{StaticResource BattleButtonStyle}" Clicked="Button1_Clicked"/>
+            <Button Text="Button2" Grid.Column="1" Style="{StaticResource BattleButtonStyle}"/>
+            <Button Text="Button3" Grid.Column="2" Style="{StaticResource BattleButtonStyle}"/>
+            <Button Text="Button4" Grid.Column="3" Style="{StaticResource BattleButtonStyle}"/>
+
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

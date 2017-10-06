@@ -152,9 +152,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TextGameExperiment\TextGameExperiment.csproj">
-      <Project>{ed584503-c48c-48dc-9781-0d7e19ba75c0}</Project>
-      <Name>TextGameExperiment</Name>
+    <ProjectReference Include="..\..\TextGameExperiment.Core\TextGameExperiment.Core.csproj">
+      <Project>{97380ada-5513-449b-a3b3-a39c9ef42e75}</Project>
+      <Name>TextGameExperiment.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
