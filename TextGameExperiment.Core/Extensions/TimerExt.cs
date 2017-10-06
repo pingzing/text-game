@@ -7,6 +7,8 @@ namespace TextGameExperiment.Core.Extensions
 {
     public class TimerExt
     {
+        private const int MinimumTimerInterval = 15; // In milliseconds. Any lower and we start to choke the platform for no actual speed gain.
+
         private Timer _backingTimer;
         private TimerCallback _currentCallback;
         private bool _isRunning;      
@@ -36,7 +38,7 @@ namespace TextGameExperiment.Core.Extensions
             }
             if (!wasRunningWhenCalled)
             {
-                _backingTimer.Change(0, _currentInterval);
+                this.Change(0, _currentInterval);
             }
         }
 
@@ -55,20 +57,20 @@ namespace TextGameExperiment.Core.Extensions
         }        
 
         public void ChangeInterval(int milliseconds)
-        {
-            _currentInterval = milliseconds;
-            _backingTimer.Change(0, milliseconds);
+        {            
+            this.Change(0, milliseconds);
         }
 
         public void Change(int delay, int interval)
         {
-            _currentInterval = interval;
-            _backingTimer.Change(delay, interval);
+            int adjustedInterval = interval == -1 ? interval : Math.Max(MinimumTimerInterval, interval); //-1 is a valid value, but nothing else lower than the minimum should be.
+            _currentInterval = adjustedInterval;
+            _backingTimer.Change(delay, adjustedInterval);
         }
 
         public void Delay(int delay)
         {
-            _backingTimer.Change(delay, _currentInterval);
+            this.Change(delay, _currentInterval);
         }
 
         private void OnTick(object state)

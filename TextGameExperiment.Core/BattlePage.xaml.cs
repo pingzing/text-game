@@ -21,7 +21,7 @@ namespace TextGameExperiment.Core
         {
             InitializeComponent();       
             TestText = $"And just$(pause 350) $(str)WHERE$(str)$(pause 150) do you think you're going, $(pause 250)$(str)young$(str)$(pause 500)$(str) man?$(str)" +
-                       $"\n$(chartime 130)...well, uh...$(chartime 1)$(pause 1000)work?$(pause 1500)" +
+                       $"\n$(stop)...well, uh...$(chartime 15)$(pause 1000)work?$(stop)" +
                        $"\n$(chartime 30)This is a long string that's operating at 30ms, so we can see it play it on a looooong string." +
                        $"\n$(chartime 15)This is a long string that's operating at 15ms, so we can see it play it on a looooong string." +                       
                        $"$(chartime 30)";
@@ -29,7 +29,8 @@ namespace TextGameExperiment.Core
             {
                 new TokenDefinition(TokenType.ChangeTiming, @"\$\(chartime (\d+)\)", 1), //Anything that looks like "text text text$(chartime 5)" where '5' can be any whole integer number
                 new TokenDefinition(TokenType.Pause, @"\$\(pause (\d+)\)", 1), // Anything that looks like "text text text$(pause 500) text text", where '500' can be any whole integer number
-                new TokenDefinition(TokenType.String, @"(\$\(str\))(.*?)(\$\(str\))", 1), // Anything bracketed by $(str), i.e. $(str)some text here$(str)
+                new TokenDefinition(TokenType.Stop, @"\$\(stop\)", 1), // Must look like $(stop)
+                new TokenDefinition(TokenType.String, @"(\$\(str\))(.*?)(\$\(str\))", 1, true), // Anything bracketed by $(str), i.e. $(str)some text here$(str)
                 new TokenDefinition(TokenType.Character, ".", 2) // Any single character
             });
         }
@@ -37,16 +38,28 @@ namespace TextGameExperiment.Core
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await Task.Delay(500);
-            NarrationBox.QueueBattleText(
-                _battleTokenizer.TokenizeText(TestText));
+            NarrationBox.BattleTokenizer = _battleTokenizer; 
         }
 
+        private bool isFirst = true;
         private void Button1_Clicked(object sender, EventArgs args)
         {
-            NarrationBox.ClearBattleText();
-            NarrationBox.QueueBattleText(
-                _battleTokenizer.TokenizeText(TestText));
+            if (isFirst)
+            {
+                isFirst = false;
+                NarrationBox.QueueBattleText(TestText);
+            }
+            NarrationBox.Next();
+        }
+
+        private void GoUp_Clicked(object sender, EventArgs args)
+        {
+            NarrationBox.PageUp();
+        }
+
+        private void GoDown_Clicked(object sender, EventArgs args)
+        {
+            NarrationBox.PageDown();
         }
     }
 }
