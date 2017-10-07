@@ -173,7 +173,7 @@ namespace TextGameExperiment.Core.Controls
              * drains the buffer.
              * --------------------------------------------------------------------------------*/
             string printableText = BattleTokenizer.StripUnprintableTokens(text);
-            PioneerLabel.Text += text;
+            PioneerLabel.Text += printableText;
             double scrollViewportHeight = Scroller.Height;
             _currentPageMaxHeight = (_currentPageIndex + 1) * scrollViewportHeight;
             double totalTextHeight = Scroller.ContentSize.Height;

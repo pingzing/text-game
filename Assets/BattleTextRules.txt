@@ -1,0 +1,5 @@
+ChangeTiming, \$\(chartime (\d+)\), 1, false
+Pause, \$\(pause (\d+)\), 1, false
+Stop, \$\(stop\), 1, false
+String, (\$\(str\))(.*?)(\$\(str\)), 1, true
+Character, ".", 2, false
