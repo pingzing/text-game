@@ -68,7 +68,7 @@
                     IsEnabled="{Binding Source={x:Reference NarrationBox}, Path=BattleTextState, Converter={StaticResource BattleTextStateToBoolConverter}}"/>
             <Button Text="Go Up" Grid.Column="1" Style="{StaticResource BattleButtonStyle}" Clicked="GoUp_Clicked"/>
             <Button Text="Go Down" Grid.Column="2" Style="{StaticResource BattleButtonStyle}" Clicked="GoDown_Clicked"/>
-            <Button Text="Button4" Grid.Column="3" Style="{StaticResource BattleButtonStyle}"/>
+            <Button Text="Load Tokenizer Rules" Grid.Column="3" Style="{StaticResource BattleButtonStyle}" Clicked="LoadRules_Clicked"/>
 
         </Grid>
 

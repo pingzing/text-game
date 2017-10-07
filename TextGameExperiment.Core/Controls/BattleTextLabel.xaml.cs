@@ -182,6 +182,7 @@ namespace TextGameExperiment.Core.Controls
             {
                 _tokenBuffer.Enqueue(token);
             }
+            
             _characterTickTimer.Start();
         }
 

@@ -1,8 +1,13 @@
 ﻿using BattleTextTokenizer;
 using BattleTextTokenizer.Models;
+using Plugin.FilePicker;
+using Plugin.FilePicker.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -13,26 +18,33 @@ namespace TextGameExperiment.Core
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BattlePage : ContentPage
     {
-        private Tokenizer _battleTokenizer;
-        private readonly string NL = Environment.NewLine;
-        private readonly string TestText;        
+        private const string DefaultRulesPath = "Assets.BattleTextRules.txt";        
+
+        private Tokenizer _battleTokenizer = new Tokenizer();
 
         public BattlePage()
         {
-            InitializeComponent();       
-            TestText = $"And just$(pause 350) $(str)WHERE$(str)$(pause 150) do you think you're going, $(pause 250)$(str)young$(str)$(pause 500)$(str) man?$(str)" +
-                       $"\n$(stop)...well, uh...$(chartime 15)$(pause 1000)work?$(stop)" +
-                       $"\n$(chartime 30)This is a long string that's operating at 30ms, so we can see it play it on a looooong string." +
-                       $"\n$(chartime 15)This is a long string that's operating at 15ms, so we can see it play it on a looooong string." +                       
-                       $"$(chartime 30)";
-            _battleTokenizer = new Tokenizer(new List<TokenDefinition>
+            InitializeComponent();                   
+
+            // Load default tokenizer rules.
+            Assembly assembly = typeof(BattlePage).GetTypeInfo().Assembly;
+            string resourceName = $"{assembly.GetName().Name}.{DefaultRulesPath}";
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
-                new TokenDefinition(TokenType.ChangeTiming, @"\$\(chartime (\d+)\)", 1), //Anything that looks like "text text text$(chartime 5)" where '5' can be any whole integer number
-                new TokenDefinition(TokenType.Pause, @"\$\(pause (\d+)\)", 1), // Anything that looks like "text text text$(pause 500) text text", where '500' can be any whole integer number
-                new TokenDefinition(TokenType.Stop, @"\$\(stop\)", 1), // Must look like $(stop)
-                new TokenDefinition(TokenType.String, @"(\$\(str\))(.*?)(\$\(str\))", 1, true), // Anything bracketed by $(str), i.e. $(str)some text here$(str)
-                new TokenDefinition(TokenType.Character, ".", 2) // Any single character
-            });
+                if (stream == null)
+                {
+                    Debug.WriteLine($"WARNING: Unable to laod default tokenizer from assembly at {resourceName}");
+                }
+                else
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        string result = reader.ReadToEnd();
+                        LoadTokenizerRuleString(result);
+                    }
+                }
+            }
         }
 
         protected override async void OnAppearing()
@@ -42,12 +54,17 @@ namespace TextGameExperiment.Core
         }
 
         private bool isFirst = true;
-        private void Button1_Clicked(object sender, EventArgs args)
+        private async void Button1_Clicked(object sender, EventArgs args)
         {
             if (isFirst)
             {
-                isFirst = false;
-                NarrationBox.QueueBattleText(TestText);
+                FileData file = await CrossFilePicker.Current.PickFile();
+                if (file != null)
+                {
+                    isFirst = false;
+                    string fileString = Encoding.UTF8.GetString(file.DataArray);
+                    NarrationBox.QueueBattleText(fileString);
+                }
             }
             NarrationBox.Next();
         }
@@ -60,6 +77,23 @@ namespace TextGameExperiment.Core
         private void GoDown_Clicked(object sender, EventArgs args)
         {
             NarrationBox.PageDown();
+        }
+
+        private async void LoadRules_Clicked(object sender, EventArgs args)
+        {
+            FileData file = await CrossFilePicker.Current.PickFile();
+            if (file != null)
+            {
+                string fileString = Encoding.UTF8.GetString(file.DataArray);
+                fileString = fileString.Replace(@"\\", @"\"); //We seem to get an extra set of backslashes somewhere, so get rid of those
+                LoadTokenizerRuleString(fileString);
+            }
+        }
+
+        private void LoadTokenizerRuleString(string rulesString)
+        {
+            rulesString = rulesString.Replace(@"\\", @"\");
+            _battleTokenizer.TokenDefinitions = RulesParser.ParseFromString(rulesString).ToList();
         }
     }
 }

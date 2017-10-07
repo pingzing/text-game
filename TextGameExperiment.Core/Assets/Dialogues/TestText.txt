@@ -1,0 +1,5 @@
+And just$(pause 350) $(str)WHERE$(str)$(pause 150) do you think you're going, $(pause 250)$(str)young$(str)$(pause 500)$(str) man?$(str)
+$(stop)...well, uh...$(chartime 15)$(pause 1000)work?$(stop)
+$(chartime 30)This is a long string that's operating at 30ms, so we can see it play it on a looooong string.
+$(chartime 15)This is a long string that's operating at 15ms, so we can see it play it on a looooong string.
+$(chartime 30)
