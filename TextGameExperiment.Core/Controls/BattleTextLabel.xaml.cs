@@ -186,6 +186,6 @@ namespace TextGameExperiment.Core.Controls
             _characterTickTimer.Start();
         }
 
-        public static readonly BindableProperty BattleTextStateProperty = BattleTextStateKey.BindableProperty;
+        public static readonly BindableProperty BattleTextStateProperty = BattleTextStateKey.BindableProperty;        
     }
 }
