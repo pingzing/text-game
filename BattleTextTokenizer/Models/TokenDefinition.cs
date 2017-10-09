@@ -6,21 +6,35 @@ using System.Collections.Generic;
 namespace BattleTextTokenizer.Models
 {
     public class TokenDefinition
-    {
-        private Regex _regex;
-        private readonly TokenType _returnsToken;
+    {                
         private readonly uint _precedence;
 
-        public TokenDefinition(TokenType returnsToken, string regexPattern, uint precendence)
+        /// <summary>
+        /// The regex used to extract the token from the surrounding text.
+        /// </summary>
+        public Regex Regex { get; }
+
+        /// <summary>
+        /// The type of token this definition will return.
+        /// </summary>
+        public TokenType ReturnsToken { get; }
+
+        /// <summary>
+        /// Whether or not the token this defines surrounds text with an opening and closing tag.
+        /// </summary>
+        public bool IsBracketed { get; set; }
+
+        public TokenDefinition(TokenType returnsToken, string regexPattern, uint precendence, bool isBracketed = false)
         {
-            _regex = new Regex(regexPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            _returnsToken = returnsToken;
+            Regex = new Regex(regexPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            ReturnsToken = returnsToken;
             _precedence = precendence;
+            IsBracketed = isBracketed;
         }
 
         public IEnumerable<TokenMatch> FindMatches(string inputString)
         {
-            MatchCollection matches = _regex.Matches(inputString);
+            MatchCollection matches = Regex.Matches(inputString);
             for (int i = 0; i < matches.Count; i++)
             {
                 Match currentMatch = matches[i];
@@ -49,7 +63,7 @@ namespace BattleTextTokenizer.Models
                 {
                     StartIndex = currentMatch.Index,
                     EndIndex = currentMatch.Index + currentMatch.Length,
-                    TokenType = _returnsToken,
+                    TokenType = ReturnsToken,
                     Value = value,
                     Precedence = _precedence
                 };

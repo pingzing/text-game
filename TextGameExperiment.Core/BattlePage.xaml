@@ -5,12 +5,14 @@
              
              xmlns:local="clr-namespace:TextGameExperiment"
              xmlns:controls="clr-namespace:TextGameExperiment.Core.Controls"
+             xmlns:conv="clr-namespace:TextGameExperiment.Core.Converters"
              
              BackgroundColor="Black"
              Title="Test">
 
     <ContentPage.Resources>
         <ResourceDictionary>
+            <conv:BattleTextStateToBoolConverter x:Key="BattleTextStateToBoolConverter"/>
             <Style x:Key="BattleButtonStyle" TargetType="Button">
                 <Setter Property="BorderColor" Value="Orange"/>
                 <Setter Property="BackgroundColor" Value="Black"/>
@@ -26,7 +28,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Frame Margin="10, 15, 10, 10" HasShadow="False" OutlineColor="WhiteSmoke">
+        <Frame BackgroundColor="Black" Margin="10, 15, 10, 10" HasShadow="False"  OutlineColor="WhiteSmoke">
             <controls:BattleTextLabel x:Name="NarrationBox" />
         </Frame>
 
@@ -40,6 +42,17 @@
                    Text="EnemyName"/>
         </ContentView>
 
+        <ContentView BackgroundColor="Black"
+                     HorizontalOptions="End" VerticalOptions="End"
+                     Margin="0, 0, 20, 0" Padding="5, 0"
+                     IsVisible="{Binding Source={x:Reference NarrationBox}, Path=BattleTextState, Converter={StaticResource BattleTextStateToBoolConverter}}">
+            <Label x:Name="ArrowLabel"
+                   TextColor="WhiteSmoke"
+                   FontAttributes="Bold"
+                   FontSize="Medium"
+                   Text="Next"/>
+        </ContentView>
+
         <Grid x:Name="ButtonsGrid" Grid.Row="1" Margin="10, 0, 10, 10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -47,10 +60,15 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="Button1" Text="Button1" Grid.Column="0" Style="{StaticResource BattleButtonStyle}" Clicked="Button1_Clicked"/>
-            <Button Text="Button2" Grid.Column="1" Style="{StaticResource BattleButtonStyle}"/>
-            <Button Text="Button3" Grid.Column="2" Style="{StaticResource BattleButtonStyle}"/>
-            <Button Text="Button4" Grid.Column="3" Style="{StaticResource BattleButtonStyle}"/>
+            <Button x:Name="Button1" 
+                    Grid.Column="0"
+                    Text="Next" 
+                    Style="{StaticResource BattleButtonStyle}" 
+                    Clicked="Button1_Clicked" 
+                    IsEnabled="{Binding Source={x:Reference NarrationBox}, Path=BattleTextState, Converter={StaticResource BattleTextStateToBoolConverter}}"/>
+            <Button Text="Go Up" Grid.Column="1" Style="{StaticResource BattleButtonStyle}" Clicked="GoUp_Clicked"/>
+            <Button Text="Go Down" Grid.Column="2" Style="{StaticResource BattleButtonStyle}" Clicked="GoDown_Clicked"/>
+            <Button Text="Load Tokenizer Rules" Grid.Column="3" Style="{StaticResource BattleButtonStyle}" Clicked="LoadRules_Clicked"/>
 
         </Grid>
 

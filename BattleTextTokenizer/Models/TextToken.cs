@@ -5,6 +5,8 @@
         public TokenType TokenType { get; set; }
         public string Value { get; set; }
 
+        public bool IsPrintable => this.TokenType == TokenType.Character || this.TokenType == TokenType.String;
+
         public TextToken(TokenType tokenType)
         {
             TokenType = tokenType;
@@ -21,5 +23,6 @@
         {
             return new TextToken(TokenType, Value);
         }
+                
     }
 }

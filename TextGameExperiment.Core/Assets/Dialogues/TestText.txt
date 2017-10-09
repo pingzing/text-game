@@ -1,0 +1,7 @@
+$(chartime 30)And just$(pause 350) $(str)WHERE$(str)$(pause 150) do you think you're going, $(pause 250)$(str)young$(str)$(pause 500)$(str) man?$(str)
+$(stop)...well, uh...$(chartime 15)$(pause 1000)work?$(stop)
+
+Hey, I've got a surprise.$(stop)
+Are you ready to hear it$(chartime 1000)....?$(chartime 30)
+Okay. $(chartime 1000)$(str)Here$(str) $(str)we$(str) $(str)go$(str)$(chartime 30).$(stop).$(stop).$(stop).$(stop).$(stop).$(stop)$(stop).$(stop)
+$(str)POW!$(str)

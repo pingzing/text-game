@@ -8,9 +8,18 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <PackageTargetFallback>portable-net45+win8+wpa81+wp8</PackageTargetFallback>
     <DebugType>Portable</DebugType>
-  </PropertyGroup>  
+  </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\BattleTextRules.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\BattleTextRules.txt" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <PackageReference Include="Xam.Plugin.FilePicker" Version="1.1.0" />
     <PackageReference Include="Xamarin.Forms" Version="2.4.0.282" />
   </ItemGroup>
 

@@ -2,5 +2,21 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TextGameExperiment.Core.Controls.BattleTextLabel">
-    <Label x:Name="BackingLabel" LineBreakMode="WordWrap" FontSize="Medium" TextColor="WhiteSmoke"/>
+    <ScrollView x:Name="Scroller" InputTransparent="True">
+        <Grid>
+            <Grid>
+                <Label x:Name="PioneerLabel" 
+                       LineBreakMode="WordWrap" 
+                       FontSize="Medium" 
+                       TextColor="Transparent"/>
+                <Label x:Name="BackingLabel" 
+                       HorizontalOptions="Start" 
+                       VerticalOptions="Start" 
+                       LineBreakMode="WordWrap" 
+                       FontSize="Medium" 
+                       TextColor="WhiteSmoke" 
+                       Text=""/>
+            </Grid>
+        </Grid>
+    </ScrollView>
 </ContentView>
