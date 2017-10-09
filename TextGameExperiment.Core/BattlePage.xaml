@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:TextGameExperiment.Core.Controls"
              xmlns:conv="clr-namespace:TextGameExperiment.Core.Converters"
              
-             BackgroundColor="Black"
+             BackgroundColor="Black"             
              Title="Test">
 
     <ContentPage.Resources>
@@ -15,9 +15,11 @@
             <conv:BattleTextStateToBoolConverter x:Key="BattleTextStateToBoolConverter"/>
             <Style x:Key="BattleButtonStyle" TargetType="Button">
                 <Setter Property="BorderColor" Value="Orange"/>
+                <Setter Property="BorderWidth" Value="2"/>
+                <Setter Property="BorderRadius" Value="0"/>
                 <Setter Property="BackgroundColor" Value="Black"/>
                 <Setter Property="TextColor" Value="Orange"/>
-                <Setter Property="HeightRequest" Value="100"/>
+                <Setter Property="HeightRequest" Value="35"/>
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -25,6 +27,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -39,7 +42,7 @@
                    TextColor="WhiteSmoke" 
                    FontAttributes="Bold"
                    FontSize="Medium"                   
-                   Text="EnemyName"/>
+                   Text="{Binding Source={x:Reference NarrationBox}, Path=Title}"/>
         </ContentView>
 
         <ContentView BackgroundColor="Black"
@@ -53,24 +56,40 @@
                    Text="Next"/>
         </ContentView>
 
-        <Grid x:Name="ButtonsGrid" Grid.Row="1" Margin="10, 0, 10, 10">
+        <Grid Grid.Row="1" ColumnSpacing="5" Padding="10,0,10,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="Button1" 
-                    Grid.Column="0"
-                    Text="Next" 
-                    Style="{StaticResource BattleButtonStyle}" 
-                    Clicked="Button1_Clicked" 
-                    IsEnabled="{Binding Source={x:Reference NarrationBox}, Path=BattleTextState, Converter={StaticResource BattleTextStateToBoolConverter}}"/>
-            <Button Text="Go Up" Grid.Column="1" Style="{StaticResource BattleButtonStyle}" Clicked="GoUp_Clicked"/>
-            <Button Text="Go Down" Grid.Column="2" Style="{StaticResource BattleButtonStyle}" Clicked="GoDown_Clicked"/>
-            <Button Text="Load Tokenizer Rules" Grid.Column="3" Style="{StaticResource BattleButtonStyle}" Clicked="LoadRules_Clicked"/>
 
+            <Button x:Name="UpButton" Grid.Column="0" Style="{StaticResource BattleButtonStyle}" Clicked="GoUp_Clicked" Text="Up"/>
+            <Button x:Name="DownButton" Grid.Column="1" Style="{StaticResource BattleButtonStyle}" Clicked="GoDown_Clicked" Text="Down"/>
+            <Button x:Name="NextButton"                     
+                    Grid.Column="2"                     
+                    Clicked="Next_Clicked"
+                    Style="{StaticResource BattleButtonStyle}"
+                    Text="Next"
+                    IsEnabled="{Binding Source={x:Reference NarrationBox}, Path=BattleTextState, Converter={StaticResource BattleTextStateToBoolConverter}}"/>
         </Grid>
+
+        <ScrollView x:Name="ButtonsGrid" 
+                    Grid.Row="2" 
+                    Margin="10, 0, 10, 10"
+                    Padding="0, 0, 0, 15"
+                    Orientation="Horizontal">
+            <controls:ItemsStack x:Name="NavigationButtonStack" 
+                                 Orientation="Horizontal"
+                                 Spacing="5">
+                <controls:ItemsStack.ItemTemplate>
+                    <DataTemplate>
+                        <Button Text="{Binding RelativeDialoguePath}"
+                                Style="{StaticResource BattleButtonStyle}"
+                                Clicked="DestinationButton_Clicked"/>
+                    </DataTemplate>
+                </controls:ItemsStack.ItemTemplate>
+            </controls:ItemsStack>
+        </ScrollView>
 
     </Grid>
 

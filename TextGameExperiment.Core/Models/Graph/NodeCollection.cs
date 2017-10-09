@@ -4,15 +4,7 @@ namespace TextGameExperiment.Core.Models.Graph
 {
     public class NodeCollection<T> : Collection<GraphNode<T>>
     {
-        public NodeCollection() : base() { }
-
-        public NodeCollection(int initialSize)
-        {
-            for (int i = 0; i < initialSize; i++)
-            {
-                base.Items.Add(default(GraphNode<T>));
-            }            
-        }
+        public NodeCollection() : base() { }        
 
         public GraphNode<T> FindByValue(T value)
         {

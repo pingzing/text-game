@@ -1,0 +1,9 @@
+$(title)CANDLELIT ROOM$(title)$(chartime 30)You round the bend to find...
+
+...holy $(pause 500)$(str)shit.$(str)
+
+It's a stone altar surrounded by taper candles, thickly encrusted in wax. The whole ensemble is surrounded by an iron pentagram anchored to the stone floor of the cavern.
+
+The candles look like they were lit recently. There aren't many fresh dribbles.
+
+You can return to the entrance. Maybe...maybe you should do that.

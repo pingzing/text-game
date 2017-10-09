@@ -11,6 +11,7 @@ namespace BattleTextTokenizer.Models
         Pause,
         ChangeTiming,
         Stop,
-        ClearScreen
+        ClearScreen,
+        Title
     }
 }

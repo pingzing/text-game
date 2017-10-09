@@ -1,0 +1,7 @@
+$(title)THE ENTRANCE$(title)$(chartime 30)You stand in the entrance of a dimly-lit cavern. 
+
+There is a roughly-hewn doorway to your left.
+
+Directly in front of you, you see flickering candlelight, obscured by a bend in the cavern.
+
+To your right is an alcove with a dim lantern resting in it.

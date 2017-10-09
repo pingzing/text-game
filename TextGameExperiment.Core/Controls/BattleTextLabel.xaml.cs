@@ -36,20 +36,6 @@ namespace TextGameExperiment.Core.Controls
         // of whitespace characters right at a page break.
         private bool _justConsumedStop = false;
 
-        private static readonly BindablePropertyKey BattleTextStateKey = BindableProperty.CreateReadOnly
-        (
-            nameof(BattleTextState),
-            typeof(DialogueState),
-            typeof(BattleTextLabel),
-            DialogueState.Halted
-        );
-
-        public DialogueState BattleTextState
-        {
-            get { return (DialogueState)GetValue(BattleTextStateProperty); }
-            private set { SetValue(BattleTextStateKey, value); }
-        }
-
         public Tokenizer BattleTokenizer { get; set; }
 
         public BattleTextLabel()
@@ -94,6 +80,9 @@ namespace TextGameExperiment.Core.Controls
                     _justConsumedStop = true;
                     BattleTextState = DialogueState.Halted;
                     break;
+                case TokenType.Title:
+                    Title = readToken.Value;
+                    break;
                 case TokenType.String:
                 case TokenType.Character:
                     BackingLabel.Text += readToken.Value;
@@ -123,19 +112,23 @@ namespace TextGameExperiment.Core.Controls
             _mostRecentToken = readToken;
         }
 
-        public void Next()
+        public async Task Next()
         {
             // TODO: smarter check here, maybe?
             if (BackingLabel.Height > _currentPageMaxHeight)
             {
-                PageDown();
+                await PageDown();
             }
             _characterTickTimer.Start();
         }
 
         public void ClearBattleText()
         {
+            PioneerLabel.Text = "";
             BackingLabel.Text = "";
+            _currentPageIndex = 0;
+            Title = null;
+            Scroller.ScrollToAsync(0, 0, false);
         }
 
         public async Task PageUp()
@@ -182,10 +175,40 @@ namespace TextGameExperiment.Core.Controls
             {
                 _tokenBuffer.Enqueue(token);
             }
-            
+
             _characterTickTimer.Start();
         }
 
-        public static readonly BindableProperty BattleTextStateProperty = BattleTextStateKey.BindableProperty;        
+        private static readonly BindablePropertyKey TitleKey = BindableProperty.CreateReadOnly
+        (
+            nameof(Title),
+            typeof(string),
+            typeof(BattleTextLabel),
+            null
+        );
+
+        public string Title
+        {
+            get => (string)GetValue(TitleProperty);
+            private set => SetValue(TitleKey, value);
+        }
+
+        public static readonly BindableProperty TitleProperty = TitleKey.BindableProperty;
+
+        private static readonly BindablePropertyKey BattleTextStateKey = BindableProperty.CreateReadOnly
+        (
+           nameof(BattleTextState),
+           typeof(DialogueState),
+           typeof(BattleTextLabel),
+           DialogueState.Halted
+        );
+
+        public DialogueState BattleTextState
+        {
+            get => (DialogueState)GetValue(BattleTextStateProperty);
+            private set => SetValue(BattleTextStateKey, value);
+        }
+
+        public static readonly BindableProperty BattleTextStateProperty = BattleTextStateKey.BindableProperty;
     }
 }

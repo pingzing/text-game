@@ -12,10 +12,18 @@
 
   <ItemGroup>
     <None Remove="Assets\BattleTextRules.txt" />
+    <None Remove="Assets\Dialogues\CenterRoom.txt" />
+    <None Remove="Assets\Dialogues\LeftRoom.txt" />
+    <None Remove="Assets\Dialogues\RightRoom.txt" />
+    <None Remove="Assets\Dialogues\StartingRoom.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Assets\BattleTextRules.txt" />
+    <EmbeddedResource Include="Assets\Dialogues\CenterRoom.txt" />
+    <EmbeddedResource Include="Assets\Dialogues\LeftRoom.txt" />
+    <EmbeddedResource Include="Assets\Dialogues\RightRoom.txt" />
+    <EmbeddedResource Include="Assets\Dialogues\StartingRoom.txt" />
   </ItemGroup>  
 
   <ItemGroup>
