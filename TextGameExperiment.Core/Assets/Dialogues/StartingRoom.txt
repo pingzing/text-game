@@ -1,4 +1,5 @@
-$(title)THE ENTRANCE$(title)$(chartime 30)You stand in the entrance of a dimly-lit cavern. 
+$(title)THE ENTRANCE$(title)
+$(chartime 30)You stand in the entrance of a dimly-lit cavern. 
 
 There is a roughly-hewn doorway to your left.
 

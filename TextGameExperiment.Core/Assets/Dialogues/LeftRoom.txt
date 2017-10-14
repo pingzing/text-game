@@ -1,3 +1,4 @@
-$(title)DARK ROOM$(title)$(chartime 30)You pass through the roughly-hewn doorway to find a room that's too dark to see. Maybe if you had some light?
+$(title)DARK ROOM$(title)
+$(chartime 30)You pass through the roughly-hewn doorway to find a room that's too dark to see. Maybe if you had some light?
 
 You can return back to the entrance.

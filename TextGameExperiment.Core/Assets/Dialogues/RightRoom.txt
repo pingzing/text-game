@@ -1,4 +1,5 @@
-$(title)LANTERN ALCOVE$(title)$(chartime 30)You approach a natural stone shelf. There's a dim storm latern resting on the shelf, nestled into the crook of the wall.
+$(title)LANTERN ALCOVE$(title)
+$(chartime 30)You approach a natural stone shelf. There's a dim storm latern resting on the shelf, nestled into the crook of the wall.
 
 You can take the latern.
 

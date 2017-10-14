@@ -1,0 +1,2 @@
+﻿Title, (\$\(title\))(.*?)(\$\(title\)), 1, true
+Character, ., 2, false

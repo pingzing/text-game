@@ -1,4 +1,5 @@
-$(title)CANDLELIT ROOM$(title)$(chartime 30)You round the bend to find...
+$(title)CANDLELIT ROOM$(title)
+$(chartime 30)You round the bend to find...
 
 ...holy $(pause 500)$(str)shit.$(str)
 

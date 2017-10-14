@@ -32,17 +32,16 @@
         </Grid.RowDefinitions>
 
         <Frame BackgroundColor="Black" Margin="10, 15, 10, 10" HasShadow="False"  OutlineColor="WhiteSmoke">
-            <controls:BattleTextLabel x:Name="NarrationBox" />
+            <controls:DialogueLabel x:Name="NarrationBox" />
         </Frame>
 
         <ContentView BackgroundColor="Black" 
                      HorizontalOptions="Start" VerticalOptions="Start"                
                      Margin="20, 0, 0, 0"  Padding="5, 0">
-            <Label x:Name="EnemyNameLabel" 
+            <Label x:Name="TitleLabel" 
                    TextColor="WhiteSmoke" 
                    FontAttributes="Bold"
-                   FontSize="Medium"                   
-                   Text="{Binding Source={x:Reference NarrationBox}, Path=Title}"/>
+                   FontSize="Medium"/>
         </ContentView>
 
         <ContentView BackgroundColor="Black"
@@ -83,7 +82,7 @@
                                  Spacing="5">
                 <controls:ItemsStack.ItemTemplate>
                     <DataTemplate>
-                        <Button Text="{Binding RelativeDialoguePath}"
+                        <Button Text="{Binding Title}"
                                 Style="{StaticResource BattleButtonStyle}"
                                 Clicked="DestinationButton_Clicked"/>
                     </DataTemplate>

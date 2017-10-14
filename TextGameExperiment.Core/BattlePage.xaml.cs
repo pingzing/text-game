@@ -1,5 +1,6 @@
 ﻿using BattleTextTokenizer;
 using BattleTextTokenizer.Models;
+using Optional;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using System;
@@ -14,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TextGameExperiment.Core.Models;
 using TextGameExperiment.Core.Models.Graph;
+using TextGameExperiment.Core.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -22,7 +24,9 @@ namespace TextGameExperiment.Core
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BattlePage : ContentPage
     {
-        private const string DefaultRulesPath = "Assets.BattleTextRules.txt";        
+        private const string DefaultRulesPath = "Assets.BattleTextRules.txt";
+
+        //private readonly IFileService _fileService;
 
         private Tokenizer _battleTokenizer = new Tokenizer();
         private Graph<Room> _roomGraph;
@@ -36,15 +40,8 @@ namespace TextGameExperiment.Core
                 if (_currentRoom != value)
                 {
                     _currentRoom = value;
-                    OnPropertyChanged(nameof(CurrentRoom));
-                    AvailableDestinations.Clear();
-                    foreach (var roomNode in _currentRoom.Neighbors)
-                    {
-                        AvailableDestinations.Add(roomNode.Value);
-                    }
-                    string roomText = LoadTextFileFromResource(_currentRoom.Value.RelativeDialoguePath);
-                    NarrationBox.ClearBattleText();
-                    NarrationBox.QueueBattleText(roomText);
+                    OnPropertyChanged(nameof(CurrentRoom));                    
+                    UpdateRoom(_currentRoom.Value.RelativeDialoguePath);
                 }
             }
         }
@@ -53,22 +50,21 @@ namespace TextGameExperiment.Core
 
 
         public BattlePage()
-        {
-            InitializeComponent();
-
-            // Load default tokenizer rules.
-            string tokenizerRulesContent = LoadTextFileFromResource(DefaultRulesPath);
-            if (tokenizerRulesContent != null)
-            {
-                LoadTokenizerRuleString(tokenizerRulesContent);
-            }
-
-            NarrationBox.BattleTokenizer = _battleTokenizer;            
+        {           
+            InitializeComponent();               
         }
 
         protected async override void OnAppearing()
         {
             base.OnAppearing();
+            // Load default tokenizer rules.         
+            Option<string> tokenizerRulesContent = await FileService.ReadFileFromResourcesAsync(DefaultRulesPath);
+            if (tokenizerRulesContent != null)
+            {
+                LoadTokenizerRuleString(tokenizerRulesContent.ValueOr(""));
+            }
+
+            NarrationBox.BattleTokenizer = _battleTokenizer;
 
             await Task.Delay(1000);
 
@@ -86,34 +82,12 @@ namespace TextGameExperiment.Core
             _roomGraph.AddUndirectedEdge(startingRoom, leftroom, 1);
             _roomGraph.AddUndirectedEdge(startingRoom, centerRoom, 1);
             _roomGraph.AddUndirectedEdge(startingRoom, rightRoom, 1);
+
+            await startingRoom.Value.LoadAsync();
             CurrentRoom = startingRoom;
 
             NavigationButtonStack.ItemsSource = AvailableDestinations;
-        }
-
-        private string LoadTextFileFromResource(string assemblyRelativePath)
-        {
-            Assembly assembly = typeof(BattlePage).GetTypeInfo().Assembly;
-            string resourceName = $"{assembly.GetName().Name}.{assemblyRelativePath}";
-            
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    Debug.WriteLine($"WARNING: Unable to laod dialogue asset from assembly at {resourceName}");
-                }
-                else
-                {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        string result = reader.ReadToEnd();
-                        return result;
-                    }
-                }
-            }
-
-            return null;
-        }
+        }        
 
         private async void GoUp_Clicked(object sender, EventArgs args)
         {
@@ -137,6 +111,21 @@ namespace TextGameExperiment.Core
             {
                 CurrentRoom = _roomGraph.Nodes.FindByValue(room);
             }
+        }
+
+        private async void UpdateRoom(string relativeDialoguePath)
+        {
+            AvailableDestinations.Clear();
+            foreach (GraphNode<Room> roomNode in _currentRoom.Neighbors)
+            {
+                await roomNode.Value.LoadAsync();
+                AvailableDestinations.Add(roomNode.Value);
+            }
+
+            TitleLabel.Text = CurrentRoom.Value.Title;
+
+            NarrationBox.ResetBattleText();
+            NarrationBox.QueueBattleText(CurrentRoom.Value.Body);
         }
 
         private void LoadTokenizerRuleString(string rulesString)

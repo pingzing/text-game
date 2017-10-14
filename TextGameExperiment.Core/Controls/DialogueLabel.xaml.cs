@@ -19,7 +19,7 @@ namespace TextGameExperiment.Core.Controls
     }
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class BattleTextLabel : ContentView
+    public partial class DialogueLabel : ContentView
     {
         private TimerExt _characterTickTimer;
         private ConcurrentQueue<TextToken> _tokenBuffer = new ConcurrentQueue<TextToken>();
@@ -38,7 +38,7 @@ namespace TextGameExperiment.Core.Controls
 
         public Tokenizer BattleTokenizer { get; set; }
 
-        public BattleTextLabel()
+        public DialogueLabel()
         {
             InitializeComponent();
             _characterTickTimer = new TimerExt(CharacterTimerTick, null, TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(30));
@@ -79,10 +79,7 @@ namespace TextGameExperiment.Core.Controls
                     _characterTickTimer.Stop();
                     _justConsumedStop = true;
                     BattleTextState = DialogueState.Halted;
-                    break;
-                case TokenType.Title:
-                    Title = readToken.Value;
-                    break;
+                    break;                
                 case TokenType.String:
                 case TokenType.Character:
                     BackingLabel.Text += readToken.Value;
@@ -107,6 +104,9 @@ namespace TextGameExperiment.Core.Controls
                     }
                     BattleTextState = DialogueState.Writing;
                     break;
+                default:
+                    Debug.WriteLine($"Found unhandled token: {readToken.Value} of type: {readToken.TokenType}. Skipping...");
+                    break;
             }
             Debug.WriteLine("Parsed: " + readToken.Value);
             _mostRecentToken = readToken;
@@ -122,12 +122,14 @@ namespace TextGameExperiment.Core.Controls
             _characterTickTimer.Start();
         }
 
-        public void ClearBattleText()
+        public void ResetBattleText()
         {
+            _characterTickTimer.Stop();
+            _tokenBuffer = new ConcurrentQueue<TextToken>();
+
             PioneerLabel.Text = "";
             BackingLabel.Text = "";
-            _currentPageIndex = 0;
-            Title = null;
+            _currentPageIndex = 0;            
             Scroller.ScrollToAsync(0, 0, false);
         }
 
@@ -177,29 +179,13 @@ namespace TextGameExperiment.Core.Controls
             }
 
             _characterTickTimer.Start();
-        }
-
-        private static readonly BindablePropertyKey TitleKey = BindableProperty.CreateReadOnly
-        (
-            nameof(Title),
-            typeof(string),
-            typeof(BattleTextLabel),
-            null
-        );
-
-        public string Title
-        {
-            get => (string)GetValue(TitleProperty);
-            private set => SetValue(TitleKey, value);
-        }
-
-        public static readonly BindableProperty TitleProperty = TitleKey.BindableProperty;
+        }       
 
         private static readonly BindablePropertyKey BattleTextStateKey = BindableProperty.CreateReadOnly
         (
            nameof(BattleTextState),
            typeof(DialogueState),
-           typeof(BattleTextLabel),
+           typeof(DialogueLabel),
            DialogueState.Halted
         );
 
