@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <PackageReference Include="Optional" Version="3.2.0" />
-    <PackageReference Include="ReactiveProperty" Version="3.6.0" />
     <PackageReference Include="Xam.Plugin.FilePicker" Version="1.1.0" />
     <PackageReference Include="Xamarin.Forms" Version="2.4.0.282" />
   </ItemGroup>

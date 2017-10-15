@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using TextGameExperiment.Core.Extensions;
 using Xamarin.Forms;
@@ -172,7 +173,8 @@ namespace TextGameExperiment.Core.Controls
             double scrollViewportHeight = Scroller.Height;
             _currentPageMaxHeight = (_currentPageIndex + 1) * scrollViewportHeight;
             double totalTextHeight = Scroller.ContentSize.Height;
-            _finalPageIndex = (int)Math.Ceiling(totalTextHeight / scrollViewportHeight) + 1;
+            _finalPageIndex = (int)Math.Ceiling(totalTextHeight / scrollViewportHeight) + 1;            
+
             foreach (TextToken token in BattleTokenizer.TokenizeText(text))
             {
                 _tokenBuffer.Enqueue(token);

@@ -34,7 +34,7 @@ namespace BattleTextTokenizer.Models
 
         public IEnumerable<TokenMatch> FindMatches(string inputString)
         {
-            MatchCollection matches = Regex.Matches(inputString);
+            MatchCollection matches = Regex.Matches(inputString);            
             for (int i = 0; i < matches.Count; i++)
             {
                 Match currentMatch = matches[i];
@@ -45,8 +45,8 @@ namespace BattleTextTokenizer.Models
                     value = currentMatch.Groups[1].ToString();
                 }
                 else if (currentMatch.Groups.Count > 2) //More than 2 is what we get when have an opening and closing tag
-                {
-                    foreach (var group in currentMatch.Groups.OfType<object>()
+                {                    
+                    foreach (var group in currentMatch.Groups.OfType<object>()                        
                         .Skip(2) // Skip the actual match and the opening tag
                         .SkipLastN(1)) // And also skip the closing tag
                     {

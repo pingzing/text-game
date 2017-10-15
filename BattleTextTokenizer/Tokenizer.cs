@@ -21,37 +21,24 @@ namespace BattleTextTokenizer
 
         public IEnumerable<TextToken> TokenizeText(string text)
         {
-            List<TokenMatch> tokenMatches = FindTokenMatches(text);
-
-            List<IGrouping<int, TokenMatch>> groupedByIndex = tokenMatches.GroupBy(x => x.StartIndex)
-                .OrderBy(x => x.Key)
-                .ToList();
+            IEnumerable<IGrouping<int, TokenMatch>> groupedByIndex = TokenDefinitions
+                .SelectMany(x => x.FindMatches(text))
+                .GroupBy(x => x.StartIndex)
+                .OrderBy(x => x.Key);
 
             TokenMatch lastMatch = null;
-            for(int i = 0; i < groupedByIndex.Count; i++)
+            foreach (IGrouping<int, TokenMatch> group in groupedByIndex)
             {
-                TokenMatch bestMatch = groupedByIndex[i].OrderBy(x => x.Precedence).First();
+                TokenMatch bestMatch = group.OrderBy(x => x.Precedence).First();
                 if (lastMatch != null && bestMatch.StartIndex < lastMatch.EndIndex)
                 {
                     continue;
                 }
 
                 yield return new TextToken(bestMatch.TokenType, bestMatch.Value);
-
                 lastMatch = bestMatch;
             }            
-        }
-
-        private List<TokenMatch> FindTokenMatches(string text)
-        {
-            var matches = new List<TokenMatch>();
-            foreach (var tokenDef in TokenDefinitions)
-            {
-                matches.AddRange(tokenDef.FindMatches(text).ToList());
-            }
-
-            return matches;
-        }
+        }        
 
         /// <summary>
         /// Returns the given string, stripped of all tokens defined by this Tokenizer.
